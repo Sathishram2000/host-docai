@@ -1,4 +1,14 @@
-/******/ (() => { // webpackBootstrap
+(function webpackUniversalModuleDefinition(root, factory) {
+	if(typeof exports === 'object' && typeof module === 'object')
+		module.exports = factory();
+	else if(typeof define === 'function' && define.amd)
+		define([], factory);
+	else if(typeof exports === 'object')
+		exports["ChatbotWidget"] = factory();
+	else
+		root["ChatbotWidget"] = factory();
+})(self, () => {
+return /******/ (() => { // webpackBootstrap
 /******/ 	var __webpack_modules__ = ({
 
 /***/ "./config.js":
@@ -23,7 +33,8 @@ module.exports = {
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__),
+/* harmony export */   renderChatbot: () => (/* binding */ renderChatbot)
 /* harmony export */ });
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "./node_modules/react/index.js");
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
@@ -35,6 +46,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _Assets_close_png__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./Assets/close.png */ "./src/Frontend/Assets/close.png");
 /* harmony import */ var _config__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ../../config */ "./config.js");
 /* harmony import */ var _config__WEBPACK_IMPORTED_MODULE_7___default = /*#__PURE__*/__webpack_require__.n(_config__WEBPACK_IMPORTED_MODULE_7__);
+/* harmony import */ var react_dom__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! react-dom */ "./node_modules/react-dom/index.js");
 function _typeof(o) { "@babel/helpers - typeof"; return _typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (o) { return typeof o; } : function (o) { return o && "function" == typeof Symbol && o.constructor === Symbol && o !== Symbol.prototype ? "symbol" : typeof o; }, _typeof(o); }
 function _toConsumableArray(r) { return _arrayWithoutHoles(r) || _iterableToArray(r) || _unsupportedIterableToArray(r) || _nonIterableSpread(); }
 function _nonIterableSpread() { throw new TypeError("Invalid attempt to spread non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
@@ -49,6 +61,7 @@ function _unsupportedIterableToArray(r, a) { if (r) { if ("string" == typeof r) 
 function _arrayLikeToArray(r, a) { (null == a || a > r.length) && (a = r.length); for (var e = 0, n = Array(a); e < a; e++) n[e] = r[e]; return n; }
 function _iterableToArrayLimit(r, l) { var t = null == r ? null : "undefined" != typeof Symbol && r[Symbol.iterator] || r["@@iterator"]; if (null != t) { var e, n, i, u, a = [], f = !0, o = !1; try { if (i = (t = t.call(r)).next, 0 === l) { if (Object(t) !== t) return; f = !1; } else for (; !(f = (e = i.call(t)).done) && (a.push(e.value), a.length !== l); f = !0); } catch (r) { o = !0, n = r; } finally { try { if (!f && null != t["return"] && (u = t["return"](), Object(u) !== u)) return; } finally { if (o) throw n; } } return a; } }
 function _arrayWithHoles(r) { if (Array.isArray(r)) return r; }
+
 
 
 
@@ -77,9 +90,8 @@ var Chatbot = function Chatbot() {
   var _useState9 = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)(false),
     _useState10 = _slicedToArray(_useState9, 2),
     loading = _useState10[0],
-    setLoading = _useState10[1]; // Loading state for API requests
-  var chatContainerRef = (0,react__WEBPACK_IMPORTED_MODULE_0__.useRef)(null); // Ref for chat container
-  var preDef = _config__WEBPACK_IMPORTED_MODULE_7__.preDefinedQuestions;
+    setLoading = _useState10[1];
+  var chatContainerRef = (0,react__WEBPACK_IMPORTED_MODULE_0__.useRef)(null);
   (0,react__WEBPACK_IMPORTED_MODULE_0__.useEffect)(function () {
     if (popupVisible) {
       fetchChatHistory();
@@ -97,14 +109,14 @@ var Chatbot = function Chatbot() {
     setPopupVisible(false);
   };
   var handleListItemClick = function handleListItemClick(event) {
-    var clickedItem = event.target;
-    displayMessage(clickedItem.textContent, true);
-    sendMessage(clickedItem.textContent);
+    var clickedItem = event.target.textContent;
+    displayMessage(clickedItem, true);
+    sendMessage(clickedItem);
   };
   var handleUserInput = function handleUserInput(event) {
-    if (event.key === "Enter") {
-      displayMessage(event.target.value, true);
-      sendMessage(event.target.value);
+    if (event.key === "Enter" && userInput.trim()) {
+      displayMessage(userInput, true);
+      sendMessage(userInput);
       setUserInput("");
     }
   };
@@ -114,17 +126,17 @@ var Chatbot = function Chatbot() {
       return _regeneratorRuntime().wrap(function _callee$(_context) {
         while (1) switch (_context.prev = _context.next) {
           case 0:
-            setLoading(true); // Set loading to true while waiting for API response
+            setLoading(true);
             _context.prev = 1;
             _context.next = 4;
             return fetch("/api/request", {
               method: "POST",
-              body: JSON.stringify({
-                query: message
-              }),
               headers: {
                 "Content-Type": "application/json"
-              }
+              },
+              body: JSON.stringify({
+                query: message
+              })
             });
           case 4:
             response = _context.sent;
@@ -212,8 +224,7 @@ var Chatbot = function Chatbot() {
     setMini(!mini);
   };
   return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("button", {
-    "class": "button-hov",
-    role: "button",
+    className: "button-hov",
     onClick: handleOpenPopup,
     style: {
       marginTop: "10px"
@@ -241,10 +252,11 @@ var Chatbot = function Chatbot() {
       width: "20px",
       height: "20px"
     },
-    onClick: handleClosePopup
+    onClick: handleClosePopup,
+    alt: "Close"
   }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("img", {
     src: mini ? _Assets_max_png__WEBPACK_IMPORTED_MODULE_4__["default"] : _Assets_min_png__WEBPACK_IMPORTED_MODULE_5__["default"],
-    alt: mini ? "Min" : "Max",
+    alt: mini ? "Maximize" : "Minimize",
     style: {
       width: "20px",
       height: "20px",
@@ -260,7 +272,7 @@ var Chatbot = function Chatbot() {
     }
   }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("ul", {
     id: "lis"
-  }, preDef.map(function (item, index) {
+  }, _config__WEBPACK_IMPORTED_MODULE_7__.preDefinedQuestions.map(function (item, index) {
     return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("li", {
       key: index,
       onClick: handleListItemClick
@@ -293,6 +305,9 @@ var Chatbot = function Chatbot() {
     },
     onKeyPress: handleUserInput
   }))));
+};
+var renderChatbot = function renderChatbot(containerId) {
+  react_dom__WEBPACK_IMPORTED_MODULE_8__.render( /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement(Chatbot, null), document.getElementById(containerId));
 };
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (Chatbot);
 
@@ -34636,6 +34651,8 @@ __webpack_require__.r(__webpack_exports__);
 react_dom__WEBPACK_IMPORTED_MODULE_1__.render( /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_src_Frontend_chatbot__WEBPACK_IMPORTED_MODULE_2__["default"], null), document.getElementById("root"));
 })();
 
+/******/ 	return __webpack_exports__;
 /******/ })()
 ;
+});
 //# sourceMappingURL=bundle.js.map
